@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.JifenjiluDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.entity.JifenjiluEntity" id="ordersMap">
+        <result property="yonghu_id" column="userid"/>
+        <result property="jifenjilu_types" column="jifenjiluTypes"/>
+        <result property="buynumber" column="buynumber"/>
+        <result property="insert_time" column="insertTime"/>
+        <result property="create_time" column="createTime"/>
+    </resultMap>
+
+
+
+    <select id="selectListView1" parameterType="map" resultType="com.entity.view.JifenjiluView" >
+        SELECT
+
+        a.id                  as id,
+        a.yonghu_id           as yonghuId,
+        a.shangpinxinxi_id    as shangpinxinxiId,
+        a.jifenjilu_types     as jifenjiluTypes,
+        a.buynumber           as buynumber,
+        a.insert_time         as insertTime,
+        a.create_time         as  createTime,
+
+
+        y.yonghuxingming      as yonghuxingming,
+        y.lianxidianhua       as lianxidianhua,
+
+        s.shangpinbianhao     as shangpinbianhao,
+        s.shangpinmingcheng   as shangpinmingcheng
+
+
+        FROM jifenjilu  a
+        left JOIN yonghu y ON y.id = a.yonghu_id
+        left JOIN shangpinxinxi s ON s.id =a.shangpinxinxi_id
+        <where>
+            <if test="params.yonghuId != null ">
+                and a.yonghu_id = #{params.yonghuId}
+            </if>
+            <if test="params.yonghuxingming != null and params.yonghuxingming != '' and params.yonghuxingming != 'null' ">
+                and y.yonghuxingming like CONCAT('%',#{params.yonghuxingming},'%')
+            </if>
+            <if test="params.lianxidianhua != null and params.lianxidianhua != '' and params.lianxidianhua != 'null' ">
+                and y.lianxidianhua like CONCAT('%',#{params.lianxidianhua},'%')
+            </if>
+            <if test="params.jifenjiluTypes != null and params.jifenjiluTypes != '' and params.jifenjiluTypes != 'null' ">
+                and y.jifenjilu_types = #{params.jifenjiluTypes}
+            </if>
+        </where>
+        order by a.id desc
+    </select>
+
+
+
+
+	<select id="selectListVO"
+		resultType="com.entity.vo.OrdersVO" >
+		SELECT * FROM orders  orders         
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectVO"
+		resultType="com.entity.vo.OrdersVO" >
+		SELECT  orders.* FROM orders  orders 	
+ 		<where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+
+    <select id="selectListView"
+		resultType="com.entity.view.OrdersView" >
+
+		SELECT  orders.* FROM orders  orders 	        
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectView"
+		resultType="com.entity.view.OrdersView" >
+		SELECT * FROM orders  orders <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+</mapper>

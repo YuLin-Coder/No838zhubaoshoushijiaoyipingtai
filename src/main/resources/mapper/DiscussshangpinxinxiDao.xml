@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.DiscussshangpinxinxiDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.entity.DiscussshangpinxinxiEntity" id="discussshangpinxinxiMap">
+        <result property="refid" column="refid"/>
+        <result property="userid" column="userid"/>
+        <result property="content" column="content"/>
+        <result property="reply" column="reply"/>
+    </resultMap>
+
+	<sql id="Base_Column_List">
+		a.id as id
+		,refid as refid
+		,userid as userid
+		,content as content
+		,reply as reply
+		</sql>
+
+	<select id="selectListView1" parameterType="map" resultType="com.entity.view.DiscussshangpinxinxiView" >
+		SELECT
+		<include refid="Base_Column_List" />
+		,y.yonghuxingming  as yonghuxingming
+		,y.lianxidianhua  as lianxidianhua
+		,s.shangpinmingcheng  as shangpinmingcheng
+
+		FROM discussshangpinxinxi  a
+		LEFT JOIN yonghu y on y.id=a.userid
+		LEFT JOIN shangpinxinxi s on s.id=a.refid
+
+		<where>
+			<if test=" params.content != '' and params.content != null and params.content != 'null' ">
+				and a.content like CONCAT('%',${r'#'}{params.content},'%')
+			</if>
+		</where>
+		order by a.id desc
+		</select>
+
+
+	<select id="selectListVO"
+		resultType="com.entity.vo.DiscussshangpinxinxiVO" >
+		SELECT * FROM discussshangpinxinxi  discussshangpinxinxi         
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectVO"
+		resultType="com.entity.vo.DiscussshangpinxinxiVO" >
+		SELECT  discussshangpinxinxi.* FROM discussshangpinxinxi  discussshangpinxinxi 	
+ 		<where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+
+    <select id="selectListView"
+		resultType="com.entity.view.DiscussshangpinxinxiView" >
+
+		SELECT  discussshangpinxinxi.* FROM discussshangpinxinxi  discussshangpinxinxi 	        
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectView"
+		resultType="com.entity.view.DiscussshangpinxinxiView" >
+		SELECT * FROM discussshangpinxinxi  discussshangpinxinxi <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+</mapper>
